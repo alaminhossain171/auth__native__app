@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator();
 export default function TabRoute() {
   return (
 
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{headerShown:false}}>
       <Tab.Screen
         name={navigationStrings.HOMESTACK} 
         component={HomeStack} />

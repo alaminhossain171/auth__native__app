@@ -4,22 +4,26 @@ import TextInputField from '../../components/TextInputField'
 import CustomButton from '../../components/CustomButton'
 import navigationStrings from '../../navigations/navigationStrings'
 import validator from '../../utils/validation';
-import { showError } from '../../utils/helperFunc'
+import { showError, showMessage } from '../../utils/helperFunc'
+import actions from '../../redux/actions'
 
 const SignUpScreen = ({ navigation }) => {
   const [state, setstate] = useState({
     isLoading: false,
-    userName:'',
+    first_name:'',
     email: '',
     password: '',
+    phone:"",
     isSecure: true
   });
-  const { email, isLoading, password, isSecure ,userName} = state;
+  const { email, isLoading, password, isSecure ,first_name,phone} = state;
   const isVaildData = () => {
     const error = validator({
-      userName,
+      first_name,
       email,
-      password
+      phone,
+      password,
+    
     })
     if (error) {
   showError(error)
@@ -29,15 +33,33 @@ const SignUpScreen = ({ navigation }) => {
   }
 
 
-  function handleRoute() {
+  async function handleRoute() {
     const checkVaild = isVaildData();
     if (checkVaild) {
-      navigation.navigate(navigationStrings.LOGIN);
+      setstate({...state,isLoading:true})
+      try {
+       const res=await actions.signup({
+        first_name,
+        email,
+        phone,
+        password
+       })
+        // console.log('signup res data==> ', res)
+        setstate({...state,isLoading:false})
+        showMessage('Please verfify your mail and password')
+        navigation.goBack()
+      } catch (error) {
+        console.log(error);
+        showError(error.message)
+        setstate({...state,isLoading:false})
+      }
+
+
+      // navigation.navigate(navigationStrings.SIGNUP);
     }
 
 
   }
-
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -46,7 +68,7 @@ const SignUpScreen = ({ navigation }) => {
           label={'User Name'}
           placeholder='Enter your User Name'
 
-          onChangeText={(e) => setstate({ ...state, userName: e })}
+          onChangeText={(e) => setstate({ ...state, first_name: e })}
 
         />
         <TextInputField
@@ -54,6 +76,13 @@ const SignUpScreen = ({ navigation }) => {
           placeholder='Enter your Email'
 
           onChangeText={(e) => setstate({ ...state, email: e })}
+
+        />
+          <TextInputField
+          label={'Phone'}
+          placeholder='Enter your Phone no'
+
+          onChangeText={(e) => setstate({ ...state, phone: e })}
 
         />
         <TextInputField
@@ -64,7 +93,8 @@ const SignUpScreen = ({ navigation }) => {
         />
 
         <CustomButton
-          title='Login'
+        isLoading={isLoading}
+          title='Signup'
           handleNavigation={handleRoute}
         />
       </View>

@@ -6,6 +6,7 @@ const Home = ({navigation}) => {
   return (
     <View>
     <Button title='Dashborad' onPress={()=>navigation.navigate(navigationStrings.DASHBORARD)} />
+    <Text style={{color:'red'}}>This is Home page</Text>
     </View>
   )
 }
