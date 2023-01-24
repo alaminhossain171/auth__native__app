@@ -1,97 +1,73 @@
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
 import TextInputField from '../../components/TextInputField'
 import CustomButton from '../../components/CustomButton'
 import navigationStrings from '../../navigations/navigationStrings'
-import validator from '../../utils/validation';
-import { showError, showMessage } from '../../utils/helperFunc'
-import actions from '../../redux/actions'
+
+// 3rd party deps 
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+
+const LoginSchema = Yup.object().shape({
+
+
+  email: Yup.string().email('Invalid email').required('Email Required'),
+  password: Yup.string().required('Password Required').min(5, ({ min }) => `Password must be ${min} character`)
+
+});
+
 
 
 const LoginScreen = ({ navigation }) => {
 
 
-
-  const [state, setstate] = useState({
-    isLoading: false,
-    email: '',
-    password: '',
-    isSecure: true
-  });
-  const { email, isLoading, password, isSecure } = state;
-  const isVaildData = () => {
-    const error = validator({
-      email,
-      password
-    })
-    if (error) {
-      showError(error)
-      return false;
-    }
-    return true
-  }
-
-
-  async function handleRoute() {
-    const checkVaild = isVaildData();
-    if (checkVaild) {
-      setstate({ ...state, isLoading: true })
-      try {
-        const res = await actions.login({
-          email,
-          password
-        })
-
-        setstate({ ...state, isLoading: false })
-        if (res.status == 200) {
-          showMessage('Login succefull')
-        }
-        else {
-          showError('Login Faild')
-        }
-      } catch (error) {
-        console.log(error);
-        showError(error.message)
-        setstate({ ...state, isLoading: false })
-      }
-
-
-      // navigation.navigate(navigationStrings.SIGNUP);
-    }
-
-
-  }
-
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
-        <TextInputField
-          label={'Email'}
-          placeholder='Enter your Email'
+      <Formik
+        validateOnMount={true}
+        validationSchema={LoginSchema}
 
-          onChangeText={(e) => setstate({ ...state, email: e })}
+        initialValues={{ email: '', password: '' }}
 
-        />
-        <TextInputField
-          label={'Password'}
-          placeholder='Enter your Password'
-          secureTextEntry={isSecure}
-          onChangeText={(e) => setstate({ ...state, password: e })}
-        />
+        onSubmit={values => console.log(values)}
 
-        <CustomButton
-          isLoading={isLoading}
-          title='Login'
-          handleNavigation={handleRoute}
-        />
+      >
+        {({ handleChange, handleBlur, handleSubmit, values, touched, isValid, errors }) => (
+          <View style={{ flex: 1 }}>
 
-        <CustomButton
+            <TextInputField
+              label={'Email'}
+              placeholder='Enter your Email'
+              onChangeText={handleChange('email')}
+              onBlur={handleBlur('email')}
+              value={values.email}
+              error={(errors.email && touched.email) ? errors.email : null}
+            />
+            <TextInputField
+              label={'Password'}
+              placeholder='Enter your Password'
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              value={values.password}
+              secureTextEntry={true}
+              error={(errors.password && touched.password) ? errors.password : null}
+            />
 
-          title='Signup'
-          handleNavigation={() => navigation.navigate(navigationStrings.SIGNUP)}
-        />
-      </View>
+            <CustomButton
+              isLoading={false}
+              title='Login'
+              handleNavigation={handleSubmit}
+            />
+
+            <CustomButton
+
+              title='Signup'
+              handleNavigation={() => navigation.navigate(navigationStrings.SIGNUP)}
+            />
+          </View>
+        )}
+      </Formik>
     </SafeAreaView>
   )
 }

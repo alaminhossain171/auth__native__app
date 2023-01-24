@@ -1,7 +1,17 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
+import navigationStrings from '../../navigations/navigationStrings'
 
-const FlashScreen = () => {
+const FlashScreen = ({ navigation }) => {
+
+  const goLogin = () => navigation.navigate(navigationStrings.LOGIN);
+
+  useEffect(() => {
+    setTimeout(() => {
+      goLogin()
+    }, 3000)
+  }, [])
+
   return (
     <View style={styles.container}>
       <Text>FlashScreen</Text>
@@ -12,10 +22,10 @@ const FlashScreen = () => {
 export default FlashScreen
 
 const styles = StyleSheet.create({
-container:{
-  flex:1,
-  justifyContent:'center',
-  alignItems:'center'
-}
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 
 })

@@ -8,6 +8,9 @@ const TextInputField = (
     placeholder,
     isSecure,
     onChangeText,
+    value,
+    onBlur,
+    error,
     ...props
 
   }
@@ -20,9 +23,12 @@ const TextInputField = (
         style={styles.input}
         placeholder={placeholder}
         onChangeText={onChangeText}
+        value={value}
+        onBlur={onBlur}
 
         {...props}
       />
+      <Text style={{ color: 'red' }}>{error}</Text>
     </SafeAreaView>
   )
 }
@@ -33,15 +39,15 @@ const styles = StyleSheet.create({
   container: {
 
     marginHorizontal: 24,
-    
+
   },
   input: {
     height: 40,
     borderWidth: 1,
     padding: 10,
-    borderRadius:10,
+    borderRadius: 10,
 
 
   },
-  labelStyle:{fontWeight:'bold',fontSize:15,marginVertical:10}
+  labelStyle: { fontWeight: 'bold', fontSize: 15, marginVertical: 10 }
 })

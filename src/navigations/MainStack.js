@@ -1,4 +1,4 @@
-import { Flash, Login, SignUp } from "../screens";
+import React from "react";
 import navigationStrings from "./navigationStrings";
 import TabRoute from "./TabRoute";
 

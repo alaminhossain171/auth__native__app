@@ -1,103 +1,94 @@
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
+import * as Yup from 'yup';
+import { Formik } from 'formik';
 import React, { useState } from 'react'
 import TextInputField from '../../components/TextInputField'
 import CustomButton from '../../components/CustomButton'
-import navigationStrings from '../../navigations/navigationStrings'
-import validator from '../../utils/validation';
-import { showError, showMessage } from '../../utils/helperFunc'
-import actions from '../../redux/actions'
+
+
+
+const SignUpSchema = Yup.object().shape({
+
+
+  username: Yup.string().min(5, 'Too Short!').max(50, 'Too Long!').required('Name Required'),
+  email: Yup.string().email('Invalid email').required('Email Required'),
+  phone: Yup.string().required("Phone is required"),
+  password: Yup.string().min(5, ({ min }) => `Password must be at least ${min} Character`).required('Password Required ').matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{5,})/,
+    "Must Contain 5 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+  ),
+
+});
 
 const SignUpScreen = ({ navigation }) => {
-  const [state, setstate] = useState({
-    isLoading: false,
-    first_name:'',
-    email: '',
-    password: '',
-    phone:"",
-    isSecure: true
-  });
-  const { email, isLoading, password, isSecure ,first_name,phone} = state;
-  const isVaildData = () => {
-    const error = validator({
-      first_name,
-      email,
-      phone,
-      password,
-    
-    })
-    if (error) {
-  showError(error)
-      return false;
-    }
-    return true
-  }
 
 
-  async function handleRoute() {
-    const checkVaild = isVaildData();
-    if (checkVaild) {
-      setstate({...state,isLoading:true})
-      try {
-       const res=await actions.signup({
-        first_name,
-        email,
-        phone,
-        password
-       })
-        // console.log('signup res data==> ', res)
-        setstate({...state,isLoading:false})
-        showMessage('Please verfify your mail and password')
-        navigation.goBack()
-      } catch (error) {
-        console.log(error);
-        showError(error.message)
-        setstate({...state,isLoading:false})
-      }
-
-
-      // navigation.navigate(navigationStrings.SIGNUP);
-    }
-
-
-  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
-      <TextInputField
-          label={'User Name'}
-          placeholder='Enter your User Name'
 
-          onChangeText={(e) => setstate({ ...state, first_name: e })}
+      <Formik
+        validateOnMount={true}
+        validationSchema={SignUpSchema}
 
-        />
-        <TextInputField
-          label={'Email'}
-          placeholder='Enter your Email'
 
-          onChangeText={(e) => setstate({ ...state, email: e })}
+        initialValues={{ username: '', email: '', phone: '', password: '' }}
 
-        />
-          <TextInputField
-          label={'Phone'}
-          placeholder='Enter your Phone no'
+        onSubmit={values => console.log(values)}
 
-          onChangeText={(e) => setstate({ ...state, phone: e })}
+      >
+        {({ handleChange, handleBlur, handleSubmit, values, touched, isValid, errors }) => (
 
-        />
-        <TextInputField
-          label={'Password'}
-          placeholder='Enter your Password'
-          secureTextEntry={isSecure}
-          onChangeText={(e) => setstate({ ...state, password: e })}
-        />
+          <View style={{ flex: 1 }}>
+            <TextInputField
+              label={'User Name'}
+              placeholder='Enter your User Name'
 
-        <CustomButton
-        isLoading={isLoading}
-          title='Signup'
-          handleNavigation={handleRoute}
-        />
-      </View>
+              onChangeText={handleChange('username')}
+              onBlur={handleBlur('username')}
+              value={values.username}
+              error={(errors.username && touched.username) ? errors.username : null}
+
+            />
+            <TextInputField
+              label={'Email'}
+              placeholder='Enter your Email'
+              onChangeText={handleChange('email')}
+              onBlur={handleBlur('email')}
+              value={values.email}
+              error={(errors.email && touched.email) ? errors.email : null}
+
+
+            />
+            <TextInputField
+              label={'Phone'}
+              placeholder='Enter your Phone no'
+              onChangeText={handleChange('phone')}
+              onBlur={handleBlur('phone')}
+              value={values.phone}
+              secureTextEntry={true}
+              error={(errors.phone && touched.phone) ? errors.phone : null}
+
+
+            />
+            <TextInputField
+              label={'Password'}
+              placeholder='Enter your Password'
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              value={values.password}
+              secureTextEntry={true}
+              error={(errors.password && touched.password) ? errors.password : null}
+            />
+
+            <CustomButton
+              isLoading={false}
+              title='Signup'
+              handleNavigation={handleSubmit}
+            />
+          </View>
+        )}
+      </Formik>
     </SafeAreaView>
   )
 }
