@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import TextInputField from '../../components/TextInputField'
 import CustomButton from '../../components/CustomButton'
 import navigationStrings from '../../navigations/navigationStrings'
@@ -7,6 +7,7 @@ import navigationStrings from '../../navigations/navigationStrings'
 // 3rd party deps 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { AuthContext } from '../../context/AuthContext';
 
 
 const LoginSchema = Yup.object().shape({
@@ -20,7 +21,7 @@ const LoginSchema = Yup.object().shape({
 
 
 const LoginScreen = ({ navigation }) => {
-
+const {test}=useContext(AuthContext)
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -35,6 +36,7 @@ const LoginScreen = ({ navigation }) => {
       >
         {({ handleChange, handleBlur, handleSubmit, values, touched, isValid, errors }) => (
           <View style={{ flex: 1 }}>
+            
 
             <TextInputField
               label={'Email'}
