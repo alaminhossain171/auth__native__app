@@ -10,18 +10,33 @@ import * as Yup from 'yup';
 import { AuthContext } from '../../context/AuthContext';
 
 
+
 const LoginSchema = Yup.object().shape({
 
 
   email: Yup.string().email('Invalid email').required('Email Required'),
-  password: Yup.string().required('Password Required').min(5, ({ min }) => `Password must be ${min} character`)
+  password: Yup.string().required('Password Required').max(5, ({ max }) => `Password must be ${max} character`)
 
 });
 
 
 
+
+
 const LoginScreen = ({ navigation }) => {
-const {test}=useContext(AuthContext)
+  const {LoginFunc} = useContext(AuthContext)
+
+function handleLogin(values){
+
+let {email,password}=values;
+
+  LoginFunc(email,password);
+
+
+}
+
+
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -31,12 +46,12 @@ const {test}=useContext(AuthContext)
 
         initialValues={{ email: '', password: '' }}
 
-        onSubmit={values => console.log(values)}
+        onSubmit={values => handleLogin(values)}
 
       >
         {({ handleChange, handleBlur, handleSubmit, values, touched, isValid, errors }) => (
           <View style={{ flex: 1 }}>
-            
+
 
             <TextInputField
               label={'Email'}

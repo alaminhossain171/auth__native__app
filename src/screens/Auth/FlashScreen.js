@@ -1,13 +1,20 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import navigationStrings from '../../navigations/navigationStrings'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 const FlashScreen = ({ navigation }) => {
+
+
+
 
   const goLogin = () => navigation.navigate(navigationStrings.LOGIN);
 
   useEffect(() => {
+    
     setTimeout(() => {
+  
       goLogin()
     }, 3000)
   }, [])
