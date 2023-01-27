@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import React, { useContext, useState } from 'react'
 import TextInputField from '../../components/TextInputField'
 import CustomButton from '../../components/CustomButton'
-import { AuthContext } from '../../context/AuthContext';
+
 
 
 
@@ -22,9 +22,9 @@ const SignUpSchema = Yup.object().shape({
 });
 
 const SignUpScreen = ({ navigation }) => {
-const {registerFunc,isLoading}=useContext(AuthContext)
+
 function resgisterUser(values){
-  registerFunc(values)
+
 }
 
   return (
@@ -85,7 +85,7 @@ function resgisterUser(values){
             />
 
             <CustomButton
-              isLoading={isLoading}
+              isLoading={false}
               title='Signup'
               handleNavigation={handleSubmit}
             />

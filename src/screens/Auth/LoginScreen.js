@@ -7,7 +7,7 @@ import navigationStrings from '../../navigations/navigationStrings'
 // 3rd party deps 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { AuthContext } from '../../context/AuthContext';
+
 
 
 
@@ -24,13 +24,13 @@ const LoginSchema = Yup.object().shape({
 
 
 const LoginScreen = ({ navigation }) => {
-  const {LoginFunc} = useContext(AuthContext)
+
 
 function handleLogin(values){
 
 
 
-  LoginFunc(values);
+
 
 
 }
