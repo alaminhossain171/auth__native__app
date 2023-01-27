@@ -1,17 +1,19 @@
 import { LOGIN, SIGNUP } from "../../config/urls";
 import { apiPost, clearUserData, setUserData } from "../../utils/utlits";
-import states from "../states/states";
-import store from "../store";
+import { store } from "../store";
+import types from "../types";
+store
 const {dispatch}=store
 
 export const saveUserData=(data)=>{
     dispatch({
-        type:states.LOGIN,
+        type:types.LOGIN,
         payload:data
     })
 }
 
 export function login(data){
+    console.log('data===> ',data)
    return new Promise((resolve,reject)=>{
     return apiPost(LOGIN,data)
     .then((res)=>{
@@ -21,6 +23,9 @@ export function login(data){
                 saveUserData(res)
             });
             return
+        }
+        else{
+            alert(res.message)
         }
         resolve(res)
       
@@ -34,6 +39,6 @@ export function signup(data){
 }
 
 export function logout(){
-dispatch({type:states.CLEAN_STATE_REDUX});
+dispatch({type:types.CLEAN_STATE_REDUX});
 clearUserData()
 }

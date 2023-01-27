@@ -7,6 +7,8 @@ import navigationStrings from '../../navigations/navigationStrings'
 // 3rd party deps 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { login, loginAction } from '../../redux/actions/authAction';
 
 
 
@@ -24,16 +26,11 @@ const LoginSchema = Yup.object().shape({
 
 
 const LoginScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
 
-
-function handleLogin(values){
-
-
-
-
-
-
-}
+  function handleLogin(values) {
+  login(values)
+  }
 
 
 
