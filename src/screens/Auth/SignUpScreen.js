@@ -1,16 +1,17 @@
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import TextInputField from '../../components/TextInputField'
 import CustomButton from '../../components/CustomButton'
+import { AuthContext } from '../../context/AuthContext';
 
 
 
 const SignUpSchema = Yup.object().shape({
 
 
-  username: Yup.string().min(5, 'Too Short!').max(50, 'Too Long!').required('Name Required'),
+  first_name: Yup.string().min(5, 'Too Short!').max(50, 'Too Long!').required('Name Required'),
   email: Yup.string().email('Invalid email').required('Email Required'),
   phone: Yup.string().required("Phone is required"),
   password: Yup.string().min(5, ({ min }) => `Password must be at least ${min} Character`).required('Password Required ').matches(
@@ -21,8 +22,10 @@ const SignUpSchema = Yup.object().shape({
 });
 
 const SignUpScreen = ({ navigation }) => {
-
-
+const {registerFunc,isLoading}=useContext(AuthContext)
+function resgisterUser(values){
+  registerFunc(values)
+}
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -32,9 +35,9 @@ const SignUpScreen = ({ navigation }) => {
         validationSchema={SignUpSchema}
 
 
-        initialValues={{ username: '', email: '', phone: '', password: '' }}
+        initialValues={{ first_name: '', email: '', phone: '', password: '' }}
 
-        onSubmit={values => console.log(values)}
+        onSubmit={values => resgisterUser(values)}
 
       >
         {({ handleChange, handleBlur, handleSubmit, values, touched, isValid, errors }) => (
@@ -44,10 +47,10 @@ const SignUpScreen = ({ navigation }) => {
               label={'User Name'}
               placeholder='Enter your User Name'
 
-              onChangeText={handleChange('username')}
-              onBlur={handleBlur('username')}
-              value={values.username}
-              error={(errors.username && touched.username) ? errors.username : null}
+              onChangeText={handleChange('first_name')}
+              onBlur={handleBlur('first_name')}
+              value={values.first_name}
+              error={(errors.first_name && touched.first_name) ? errors.first_name : null}
 
             />
             <TextInputField
@@ -82,7 +85,7 @@ const SignUpScreen = ({ navigation }) => {
             />
 
             <CustomButton
-              isLoading={false}
+              isLoading={isLoading}
               title='Signup'
               handleNavigation={handleSubmit}
             />

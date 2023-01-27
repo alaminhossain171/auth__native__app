@@ -28,9 +28,9 @@ const LoginScreen = ({ navigation }) => {
 
 function handleLogin(values){
 
-let {email,password}=values;
 
-  LoginFunc(email,password);
+
+  LoginFunc(values);
 
 
 }
